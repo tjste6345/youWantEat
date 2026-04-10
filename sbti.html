@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>SBTI专属测试</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+    body{background:#f9f9f9;padding:20px;max-width:600px;margin:0 auto}
+    .box{background:white;padding:20px;border-radius:12px;margin-bottom:20px}
+    .title{font-size:22px;margin-bottom:16px;color:#333}
+    .question{margin:14px 0}
+    .option{padding:10px;background:#f2f2f2;border-radius:8px;margin:6px 0;cursor:pointer}
+    .option:hover{background:#e0e0e0}
+    .btn{background:#409eff;color:white;padding:12px;border-radius:8px;text-align:center;cursor:pointer;margin-top:20px}
+    .result{display:none;padding:20px;background:#ecf5ff;border-radius:12px;margin-top:20px}
+  </style>
+</head>
+<body>
+<div class="box">
+  <div class="title">SBTI 性格类型测试</div>
+  <div id="questions"></div>
+  <div class="btn" onclick="calc()">查看结果</div>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+let questions = [
+  {q:"你更偏向？",o:["A 安静独处","B 热闹社交"]},
+  {q:"做事风格？",o:["A 计划清晰","B 随性而为"]},
+  {q:"做决定靠？",o:["A 理性思考","B 感觉心情"]},
+  {q:"面对新环境？",o:["A 谨慎观察","B 主动适应"]},
+  {q:"压力下你会？",o:["A 独自消化","B 找人倾诉"]}
+];
+let answers = [];
+
+function show(){
+  let dom = document.getElementById("questions");
+  dom.innerHTML = "";
+  questions.forEach((e,i)=>{
+    let h = `<div class="question">${i+1}、${e.q}</div>`;
+    e.o.forEach(op=>{
+      h+=`<div class="option" onclick="choose(${i},'${op[0]}')">${op}</div>`;
+    });
+    dom.innerHTML += h;
+  });
+}
+
+function choose(i,c){
+  answers[i] = c;
+  // 给选中的选项加高亮
+  document.querySelectorAll('.option')[i*2].style.background = '#d0e7ff';
+  document.querySelectorAll('.option')[i*2+1].style.background = '#f2f2f2';
+  if(c === 'B'){
+    document.querySelectorAll('.option')[i*2+1].style.background = '#d0e7ff';
+    document.querySelectorAll('.option')[i*2].style.background = '#f2f2f2';
+  }
+}
+
+function calc(){
+  if(answers.length < questions.length){
+    alert("请答完所有题目哦~");
+    return;
+  }
+  let a = answers.filter(i=>i=="A").length;
+  let b = answers.filter(i=>i=="B").length;
+  let text = "";
+  if(a>=4) text="🧊 理智冷静型｜做事稳重、思考优先，是朋友里的靠谱担当";
+  else if(b>=4) text="☀️ 阳光外向型｜热情主动、社交达人，走到哪都是小太阳";
+  else if(a>b) text="☁️ 温和平衡型｜内敛又不失开朗，温柔又有力量";
+  else text="🌟 自由随性型｜灵活洒脱、不喜欢约束，永远保持新鲜感";
+  document.getElementById("result").style.display="block";
+  document.getElementById("result").innerHTML = `<h3>你的SBTI结果是：</h3><p>${text}</p>`;
+}
+
+show();
+</script>
+</body>
+</html>
